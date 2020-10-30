@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const getStateFromLocalStorage = () => {
   const storage = localStorage.getItem('counterState');
@@ -8,6 +8,7 @@ const getStateFromLocalStorage = () => {
 
 function storeStateInLocalStorage() {
   localStorage.setItem('counterState', JSON.stringify(this.state));
+  console.log(localStorage);
 }
 
 const Counter = ({ max, step }) => {
@@ -19,12 +20,14 @@ const Counter = ({ max, step }) => {
       return c + step;
     });
   };
-
-  // const increment = () => setCount(count + 1);
-// on lesson useEffect & dependencies 
-// react state management 
+// on lesson use effect 
   const decrement = () => setCount(count - 1);
   const reset = () => setCount(0);
+
+  useEffect(() => {
+    document.title = `Counter: ${count}`;
+  }, [count]);
+
   return (
     <div className='Counter'>
       <p className='count'>{count}</p>
