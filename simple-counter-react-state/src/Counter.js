@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const getStateFromLocalStorage = () => {
   const storage = localStorage.getItem('counterState');
@@ -10,47 +10,30 @@ function storeStateInLocalStorage() {
   localStorage.setItem('counterState', JSON.stringify(this.state));
 }
 
-class Counter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = getStateFromLocalStorage();
-    this.increment = this.increment.bind(this);
-    this.decrement = this.decrement.bind(this);
-    this.reset = this.reset.bind(this);
-    this.updateDocumentTitle = this.updateDocumentTitle.bind(this);
-  }
+const Counter = ({ max, step }) => {
+  const [count, setCount] = useState(0);
 
-  updateDocumentTitle() {
-    document.title = this.state.count;
-  }
+  const increment = () => {
+    setCount((c) => {
+      if (c >= max) return c;
+      return c + step;
+    });
+  };
 
-  increment() {
-    this.setState((state, props) => {
-      const { max, step } = this.props;
-      if (state.count >= max) return;
-      return { count: state.count + step };
-    }, this.updateDocumentTitle);
-  }
-
-  decrement() {
-    this.setState({ count: this.state.count - 1 }, this.updateDocumentTitle);
-  }
-  reset() {
-    this.setState({ count: 0 }, this.updateDocumentTitle);
-  }
-
-  render() {
-    const { count } = this.state;
-    return (
-      <div className='Counter'>
-        <p className='count'>{count}</p>
-        <section className='controls'>
-          <button onClick={this.increment}>Increment</button>
-          <button onClick={this.decrement}>Decrement</button>
-          <button onClick={this.reset}>Reset</button>
-        </section>
-      </div>
-    );
-  }
-}
+  // const increment = () => setCount(count + 1);
+// on lesson useEffect & dependencies 
+// react state management 
+  const decrement = () => setCount(count - 1);
+  const reset = () => setCount(0);
+  return (
+    <div className='Counter'>
+      <p className='count'>{count}</p>
+      <section className='controls'>
+        <button onClick={increment}>Increment</button>
+        <button onClick={decrement}>Decrement</button>
+        <button onClick={reset}>Reset</button>
+      </section>
+    </div>
+  );
+};
 export default Counter;
