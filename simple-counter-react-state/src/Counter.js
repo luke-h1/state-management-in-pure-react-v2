@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 
-const getStateFromLocalStorage = () => {
-  const storage = localStorage.getItem('counterState');
-  if (storage) return JSON.parse(storage);
-  return { count: 0 };
+const useLocalStorage = (initialState, key) => {
+  const getstateFromLocalStorage = () => {
+    let value = '0';
+    const storage = localStorage.getItem(key);
+    console.log(storage)
+    if (storage) return JSON.parse(storage)[value];
+    return initialState;
+  };
+
+  const [value, setValue] = useState(getstateFromLocalStorage());
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify({ value }));
+  }, [value]);
+
+  return [value, setValue];
 };
 
-function storeStateInLocalStorage() {
-  localStorage.setItem('counterState', JSON.stringify(this.state));
+function storeStateInLocalStorage(count) {
+  localStorage.setItem('counterState', JSON.stringify({ count }));
   console.log(localStorage);
 }
 
 const Counter = ({ max, step }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useLocalStorage(0, 'count');
 
   const increment = () => {
     setCount((c) => {
@@ -20,12 +32,17 @@ const Counter = ({ max, step }) => {
       return c + step;
     });
   };
-// on lesson use effect 
   const decrement = () => setCount(count - 1);
   const reset = () => setCount(0);
 
   useEffect(() => {
     document.title = `Counter: ${count}`;
+  }, [count]);
+  // no dependecies = only runs when component mounts
+  // dependencies = runs when the state of the dependency changes
+// refactoring and custom hook 
+  useEffect(() => {
+    storeStateInLocalStorage(count);
   }, [count]);
 
   return (
