@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const useLocalStorage = (initialState, key) => {
   const getstateFromLocalStorage = () => {
     let value = '0';
-    const storage = localStorage.getItem(key);
+    const storage = localStorage.getItem(initialState);
     console.log(storage)
     if (storage) return JSON.parse(storage)[value];
     return initialState;
@@ -13,7 +13,7 @@ const useLocalStorage = (initialState, key) => {
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify({ value }));
-  }, [value]);
+  }, [value, key]);
 
   return [value, setValue];
 };
@@ -38,9 +38,7 @@ const Counter = ({ max, step }) => {
   useEffect(() => {
     document.title = `Counter: ${count}`;
   }, [count]);
-  // no dependecies = only runs when component mounts
-  // dependencies = runs when the state of the dependency changes
-// refactoring and custom hook 
+
   useEffect(() => {
     storeStateInLocalStorage(count);
   }, [count]);
