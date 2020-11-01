@@ -1,12 +1,13 @@
-import React from 'react';
-import Grudge from './Grudge';
+import React, { useContext } from 'react';
+import Grudge from './GrudgeContext';
 
-const Grudges = ({ grudges = [], onForgive }) => {
+const Grudges = () => {
+  const { grudges } = useContext(GrudgeContext);
   return (
     <section className="Grudges">
       <h2>Grudges ({grudges.length})</h2>
-      {grudges.map(grudge => (
-        <Grudge key={grudge.id} grudge={grudge} onForgive={onForgive} />
+      {grudges.map((grudge) => (
+        <Grudge key={grudge.id} grudge={grudge} />
       ))}
     </section>
   );
